@@ -1,43 +1,53 @@
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface EventCardProps {
   title: string;
   date: string;
   image: string;
   link: string;
+  index: number;
+  hovered: number | null;
+  setHovered: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-export const EventCard = ({ title, date, image, link }: EventCardProps) => {
+export const EventCard = ({
+  title,
+  date,
+  image,
+  link,
+  index,
+  hovered,
+  setHovered,
+}: EventCardProps) => {
   return (
     <Link
       to={link}
-      className="block focus:outline-none focus:ring-0"
+      onMouseEnter={() => setHovered(index)}
+      onMouseLeave={() => setHovered(null)}
+      className="focus:outline-none focus:ring-0 block"
     >
       <div
-        className="
-          smartphone-frame
-          w-[350px]
-          transition-all duration-300 
-          ease-[cubic-bezier(0.22,1,0.36,1)]
-          rounded-2xl
-          overflow-visible
+        className={cn(
+          "relative rounded-2xl overflow-hidden w-[350px] h-[550px] transition-all duration-300 ease-out border-2 border-neutral-700",
 
-          hover:w-[550px]
-          hover:-translate-y-3
-          hover:shadow-2xl
-        "
+          // non-hovered cards slightly blurred if something else is hovered
+          hovered !== null && hovered !== index && "blur-sm scale-[0.96]",
+
+          // hovered card
+          hovered === index && "scale-105 border-blue-500"
+        )}
       >
-        <div className="relative w-full h-[600px] overflow-hidden rounded-2xl bg-secondary">
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition-all duration-300"
-          />
+        <img src={image} alt={title} className="w-full h-full object-cover" />
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
-            <h3 className="text-5xl font-semibold mb-1 line-clamp-2">
-              {title}
-            </h3>
+        <div
+          className={cn(
+            "absolute inset-0 flex items-end p-6 bg-gradient-to-t from-black/90 to-transparent transition-opacity duration-300",
+            hovered === index ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <div>
+            <h3 className="text-4xl font-semibold">{title}</h3>
             <p className="text-lg text-accent">{date}</p>
           </div>
         </div>
