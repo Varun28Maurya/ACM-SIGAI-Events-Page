@@ -28,16 +28,17 @@ export const EventCard = ({
       className="focus:outline-none focus:ring-0 block"
     >
       <div
-        className={cn(
-          "relative rounded-2xl overflow-hidden w-[350px] h-[500px] transition-all duration-300 ease-out border-2 border-neutral-700",
+  className={cn(
+    "relative rounded-2xl overflow-hidden w-[250px] h-[500px] transition-all duration-300 ease-out border-2 border-neutral-700",
 
-          // non-hovered cards slightly blurred if something else is hovered
-          hovered !== null && hovered !== index && "blur-sm scale-[0.96]",
+    // non-hovered cards slightly blurred if something else is hovered
+    hovered !== null && hovered !== index && "blur-sm scale-[0.96]",
 
-          // hovered card
-          hovered === index && "scale-105 border-blue-500"
-        )}
-      >
+    // hovered card
+    hovered === index && "scale-105 border-blue-500"
+  )}
+>
+
         <img src={image} alt={title} className="w-full h-full object-cover" />
 
         <div
