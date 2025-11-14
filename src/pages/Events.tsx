@@ -61,70 +61,87 @@ const events2024 = [
 const Events = () => {
   const [hovered, setHovered] = useState<number | null>(null);
   useEffect(() => {
-    const layer = document.createElement("div");
-    layer.id = "splash-layer";
-    layer.className = "fixed inset-0 z-[999] pointer-events-none overflow-hidden";
-    document.body.appendChild(layer);
+  const layer = document.createElement("div");
+  layer.id = "splash-layer";
+  layer.className = "fixed inset-0 z-[999] pointer-events-none overflow-hidden";
+  document.body.appendChild(layer);
 
-    const aurora = document.querySelector(".aurora-bg") as HTMLElement;
+  const aurora = document.querySelector(".aurora-bg") as HTMLElement;
 
-    // ✅ Apply transition ONCE
-    if (aurora) {
-      aurora.style.transition = "transform 0.08s ease-out";
-      aurora.style.willChange = "transform"; // optimization
-    }
+  // Apply parallax transition once
+  if (aurora) {
+    aurora.style.transition = "transform 0.08s ease-out";
+    aurora.style.willChange = "transform";
+  }
 
-    const handleParallax = (e) => {
-      if (!aurora) return;
+  const handleParallax = (e) => {
+    if (!aurora) return;
 
-      const x = (e.clientX / window.innerWidth - 0.5) * 10;
-      const y = (e.clientY / window.innerHeight - 0.5) * 10;
+    const x = (e.clientX / window.innerWidth - 0.5) * 10;
+    const y = (e.clientY / window.innerHeight - 0.5) * 10;
 
-      aurora.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.15)`;
-    };
+    aurora.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.15)`;
+  };
 
-    window.addEventListener("mousemove", handleParallax);
+  window.addEventListener("mousemove", handleParallax);
 
-    let lastTime = 0;
-    const throttleDelay = 50;
+  let lastTime = 0;
+  const throttleDelay = 50;
 
-    const createSplash = (x, y) => {
-      const splash = document.createElement("div");
-      splash.className = "splash-advanced";
+  const createSplash = (x, y) => {
+    const splash = document.createElement("div");
+    splash.className = "splash-advanced";
 
-      const size = Math.max(window.innerWidth, window.innerHeight) * 0.12;
-      splash.style.width = `${size}px`;
-      splash.style.height = `${size}px`;
-      splash.style.left = `${x}px`;
-      splash.style.top = `${y + window.scrollY}px`;
+    const size = Math.max(window.innerWidth, window.innerHeight) * 0.12;
+    splash.style.width = `${size}px`;
+    splash.style.height = `${size}px`;
+    splash.style.left = `${x}px`;
+    splash.style.top = `${y}px`;
 
-      const inner = document.createElement("div");
-      inner.className = "splash-inner";
-      splash.appendChild(inner);
+    const inner = document.createElement("div");
+    inner.className = "splash-inner";
+    splash.appendChild(inner);
 
-      const outer = document.createElement("div");
-      outer.className = "splash-outer";
-      splash.appendChild(outer);
+    const outer = document.createElement("div");
+    outer.className = "splash-outer";
+    splash.appendChild(outer);
 
-      layer.appendChild(splash);
-      setTimeout(() => splash.remove(), 1200);
-    };
+    layer.appendChild(splash);
+    setTimeout(() => splash.remove(), 1200);
+  };
 
-    const handleMove = (e) => {
-      const now = Date.now();
-      if (now - lastTime < throttleDelay) return;
-      lastTime = now;
-      createSplash(e.clientX, e.clientY);
-    };
+  // Mouse splash (desktop)
+  const handleMove = (e) => {
+    const now = Date.now();
+    if (now - lastTime < throttleDelay) return;
+    lastTime = now;
+    createSplash(e.clientX, e.clientY + window.scrollY);
+  };
 
-    window.addEventListener("mousemove", handleMove);
+  window.addEventListener("mousemove", handleMove);
 
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("mousemove", handleParallax);
-      layer.remove();
-    };
-  }, []);
+  // ⭐ Scroll splash (mobile + tablet)
+  const handleScroll = () => {
+    const now = Date.now();
+    if (now - lastTime < throttleDelay) return;
+    lastTime = now;
+
+    const randomX = Math.random() * window.innerWidth;
+    const y = window.scrollY + window.innerHeight * 0.3; // mid-screen splash
+
+    createSplash(randomX, y);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("mousemove", handleMove);
+    window.removeEventListener("mousemove", handleParallax);
+    window.removeEventListener("scroll", handleScroll);
+    layer.remove();
+  };
+}, []);
+
 
 
   return (
@@ -140,13 +157,24 @@ const Events = () => {
         <div className="flex-grow"> {/* <-- this ensures footer stays at bottom */}
           <section className="flex items-start justify-start px-8 sm:px-12 md:px-16 pt-32 pb-10 overflow-hidden">
             <div className="max-w-4xl">
-              <h1 className="text-6xl sm:text-8xl md:text-[14rem] lg:text-[18rem] font-extrabold mb-10 tracking-tighter leading-none">
-                EVENTS
-              </h1>
+              <h1
+  className="
+    whitespace-nowrap
+    text-[clamp(6rem,15vw,22rem)]
+    font-extrabold 
+    mb-10 
+    tracking-tighter 
+    leading-none
+  "
+>
+  EVENTS
+</h1>
+
               <div className="text-lg sm:text-xl md:text-2xl text-foreground/90 font-light">
                 <TypewriterText
                   text="Hands-on workshops, competitions, and seminars."
                   speed={50}
+                  loop={true}
                 />
               </div>
             </div>

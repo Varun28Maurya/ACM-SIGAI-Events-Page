@@ -7,7 +7,8 @@ const Seminar = () => {
       <Navigation />
 
       {/* Hero Section with Gradient */}
-      <div className="gradient-blue-glow-left pt-24 pb-16 px-16">
+      <div className="gradient-blue-glow-left pt-24 pb-16 px-4 md:px-12 lg:px-16">
+
         <div className="max-w-4xl">
           <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
             Seminar on Cloud Computing and Microservices
@@ -19,11 +20,14 @@ const Seminar = () => {
       </div>
 
       {/* Content Section with Floating Image */}
-      <main className="flex-1 px-16 py-12 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <main className="flex-1 px-4 sm:px-8 md:px-12 lg:px-16 py-8 md:py-12 relative">
+
+        <div className="grid grid-cols-1 2xl:grid-cols-2 gap-12 items-start">
 
           {/* Left Column - Content */}
-          <div className="space-y-8">
+          <div className="space-y-8 order-2 2xl:order-1">
+
+
             <section>
               <h2 className="text-3xl font-bold mb-4">Event Overview</h2>
               <p className="text-foreground/80 leading-relaxed">
@@ -68,9 +72,13 @@ const Seminar = () => {
           </div>
 
           {/* Right Column - Floating Image */}
-          <div className="lg:sticky lg:top-24">
+          <div className="2xl:sticky 2xl:top-24 order-1 2xl:order-2">
+
+
+
             <div
-              className="relative rounded-2xl overflow-hidden shadow-2xl transform lg:-translate-y-24"
+              className="relative rounded-2xl overflow-hidden shadow-2xl transform 2xl:-translate-y-24"
+
               style={{ boxShadow: '0 25px 50px -12px rgba(59, 130, 246, 0.25)' }}
             >
               <img
